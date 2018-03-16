@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"time"
+	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
+)
 
 type Gender string
 
@@ -21,4 +24,9 @@ type User struct {
 	From        string    `json:"from"`
 	CreatedAt   time.Time `json:"createdAt"`
 	UpdatedAt   time.Time `json:"updatedAt"`
+}
+
+// UserのIDを発行する
+func newUserID(userName string) string {
+	return util.GetHash(userName)
 }
