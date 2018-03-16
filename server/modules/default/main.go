@@ -1,13 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/gin-gonic/gin"
+	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/api"
+)
 
-func init() {
-	ans := sum(2, 3)
-	fmt.Println(ans)
+const _APIPath = "/api"
 
-}
-
-func sum(a, b int)int {
-	return a + b
+// API群を初期登録する。
+func initAPI(g *gin.Engine) {
+	apiGin := g.Group(_APIPath)
+	api.InitUserAPI(apiGin)
 }
