@@ -1,6 +1,9 @@
 package model
 
-import "testing"
+import (
+	"testing"
+	"reflect"
+)
 
 const (
 	_TestUserName    = "TestUserName"
