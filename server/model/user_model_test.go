@@ -42,3 +42,37 @@ func TestNewUser(t *testing.T) {
 		})
 	})
 }
+
+func TestUpdateUser(t *testing.T) {
+	t.Run("UpdateUser", func(t *testing.T) {
+		t.Run("Userの値を元に、既存のUserのIDとUserName以外の値が更新されること", func(t *testing.T) {
+			actual := User{
+				UserName:    _TestUserName,
+				MailAddress: _TestMailAddress,
+				Age:         _TestAge,
+				Gender:      _TestGender,
+				From:        _TestFrom,
+			}
+
+			actual = NewUser(actual)
+
+			expected1 := User{
+				UserName:    _TestUserName,
+				MailAddress: _TestMailAddress + _Modification,
+				Age:         _TestAge + 50,
+				Gender:      _TestGender + _Modification,
+				From:        _TestFrom + _Modification,
+			}
+
+			actual = UpdateUser(actual, expected1)
+
+			expected2 := NewUser(expected1)
+
+			if !reflect.DeepEqual(actual, expected2) {
+				t.Errorf("actual : %+v, expected2 : %+v", actual, expected2)
+			}
+
+		})
+	})
+
+}
