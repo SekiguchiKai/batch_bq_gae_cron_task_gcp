@@ -1,0 +1,1 @@
+# batch_bq_gae_cron_task_gcp
