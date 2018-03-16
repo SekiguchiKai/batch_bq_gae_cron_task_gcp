@@ -11,31 +11,54 @@ import (
 	"context"
 )
 
+// リクエストで受け取ったUserをDatastoreに新たに格納する。
 func createUser(c *gin.Context) {
 	util.InfoLog(c.Request, "createUser is called")
 
-	var u model.User
-	if err := bindUserFromJson(c, &u); err != nil {
+	var param model.User
+	if err := bindUserFromJson(c, &param); err != nil {
 		util.RespondAndLog(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	if err := validateParamsForUser(u); err != nil {
+	if err := validateParamsForUser(param); err != nil {
 		util.RespondAndLog(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
 
-	u = model.NewUser(u)
+	u := model.NewUser(param)
 	u.CreatedAt = time.Now().UTC()
 	u.UpdatedAt = time.Now().UTC()
 
 	util.InfoLog(c.Request, "u :%+v", u)
 
 
+	err := store.RunInTransaction(c.Request, func(ctx context.Context) error {
+		s := store.NewUserStoreWithContext(ctx)
+
+		if exists, err := s.ExistsUser(u.ID); err != nil {
+			util.RespondAndLog(c, http.StatusInternalServerError, err.Error())
+			return err
+		}else if exists {
+			util.RespondAndLog(c, http.StatusBadRequest, util.CreateErrMessage(_NotUniqueErrMessage).Error())
+			return util.CreateErrMessage(_NotUniqueErrMessage)
+		}
+
+		if err := s.PutUser(u); err != nil {
+			util.RespondAndLog(c, http.StatusInternalServerError, err.Error())
+			return err
+		}
+
+		return nil
+	})
 
 
+	if err != nil {
+		return
+	}
 
+	c.JSON(http.StatusOK, nil)
 
 }
 
