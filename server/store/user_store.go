@@ -35,6 +35,7 @@ func (s UserStore)PutUser(u model.User)error {
 		return err
 	}
 
+	return nil
 
 }
 
