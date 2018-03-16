@@ -35,6 +35,26 @@ func (bq *BQClientWrapper) PutData(dataset, table string, src interface{}) error
 	return upl.Put(bq.ctx, src)
 }
 
+// BigQueryにQueryを発行して、結果をロードする。
+func (bq *BQClientWrapper) QueryAndLoad(ctx context.Context, sql string, dst *[]interface{}) error {
+	// SQLからQueryを発行する
+	query := bq.client.Query(sql)
+	// スタンダードSQLを使用する
+	query.QueryConfig.UseStandardSQL = true
+
+	// Queryを実行して、RowIteratorを取得
+	it, err := query.Read(ctx)
+	if err != nil {
+		return err
+	}
+
+	if err := loadBQResult(it, dst); err != nil {
+		return err
+	}
+
+	return nil
+
+}
 
 // BigQueryのQueryの結果をロードする。
 func loadBQResult(it *bigquery.RowIterator, dst *[]interface{}) error {
