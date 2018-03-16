@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/api"
+	"net/http"
+	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
 )
 
-const _APIPath = "/api"
+
 
 // エントリポイント
 func init() {
@@ -19,6 +21,6 @@ func init() {
 
 // API群を初期登録する。
 func initAPI(g *gin.Engine) {
-	apiGin := g.Group(_APIPath)
+	apiGin := g.Group(util.GetApiPath())
 	api.InitUserAPI(apiGin)
 }
