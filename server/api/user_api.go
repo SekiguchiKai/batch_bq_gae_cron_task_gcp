@@ -24,3 +24,4 @@ func bindUserFromJson(c *gin.Context, dst *model.User) error {
 func getUserID(c *gin.Context) string {
 	return c.Param("id")
 }
+
