@@ -11,6 +11,11 @@ import (
 	"context"
 )
 
+// UserAPIを初期化する。
+func InitUserAPI(g *gin.RouterGroup) {
+	g.POST("user/new",createUser)
+}
+
 // リクエストで受け取ったUserをDatastoreに新たに格納する。
 func createUser(c *gin.Context) {
 	util.InfoLog(c.Request, "createUser is called")
