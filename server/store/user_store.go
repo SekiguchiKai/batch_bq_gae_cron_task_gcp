@@ -4,6 +4,7 @@ import (
 	"context"
 	"google.golang.org/appengine"
 	"net/http"
+	"google.golang.org/appengine/datastore"
 )
 
 const _UserKind = "User"
@@ -22,4 +23,9 @@ func NewUserStore(r *http.Request) UserStore {
 // context.ContextからUserStoreを新規発行する。
 func NewUserStoreWithContext(ctx context.Context) UserStore {
 	return UserStore{ctx: ctx}
+}
+
+// UserKind用のdatastore.Keyを発行する。
+func (s UserStore) newUserStoreKey(id string) *datastore.Key {
+	return datastore.NewKey(s.ctx, _UserKind, id, 0, nil)
 }
