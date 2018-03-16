@@ -36,24 +36,10 @@ jobs:
       name: Run Server Unit Tests. $GOPATH/src/github.com/SekiguchiKai/batch_bq_task_gcp
       command: ./scripts/server_test.sh
 
- client-build:
-  docker:
-   - image: circleci/node:8.6.0
-  environment:
-   TZ: /usr/share/zoneinfo/Asia/Tokyo
-  working_directory: /home/circleci/go/src/github.com/SekiguchiKai/batch_bq_task_gcp
-  steps: # PJで依存していて、ローカルでも必要なものはshell scriptで、そうでないものはベタがきで
-   - checkout # sshでgit hubやるときはなしで
-   - run:
-      name: Execute client_setup.sh. /home/circleci/go/src/github.com/SekiguchiKai/batch_bq_task_gcp/client
-      command: ./scripts/client_setup.sh /home/circleci/go/src/github.com/SekiguchiKai/batch_bq_task_gcp/client
-   - run:
-      name: Run Client Unit Tests. /home/circleci/go/src/github.com/SekiguchiKai/batch_bq_task_gcp/client
-      command: ./scripts/client_test.sh /home/circleci/go/src/github.com/SekiguchiKai/batch_bq_task_gcp/client
+
 
 workflows:
   version: 2
   build_and_test:
     jobs:
       - build
-      - client-build
