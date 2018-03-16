@@ -1,0 +1,59 @@
+version: 2 # バージョン2を指定する
+jobs:
+ build: # Goのbuildとテストを行う
+  docker:
+   - image: circleci/golang:1.8 # Dockefileのパスを指定(Goを指定)
+  environment:
+   TZ: /usr/share/zoneinfo/Asia/Tokyo
+  working_directory: /home/circleci/go/src/github.com/SekiguchiKai/batch_bq_task_gcp # コード実行場所
+  steps: # PJで依存していて、ローカルでも必要なものはshell scriptで、そうでないものはベタがきで
+   - checkout # sshでgit hubやるときはなしで
+   - run:
+      name: Set the PATH to .bashrc.
+      command: |
+       echo 'export PATH=$HOME/go/bin:$HOME/go_appengine:$PATH' >> $BASH_ENV  # $BASH_ENVはデフォルトで入っている
+       source /home/circleci/.bashrc
+   - run:
+      name: Make GOPATH directory.
+      command: mkdir -p $HOME/go/src
+   - run:
+      name: Set the GOPATH to .bashrc.
+      command: |
+       echo 'export GOPATH=$HOME/go' >> $BASH_ENV  # $BASH_ENVはデフォルトで入っている
+       source /home/circleci/.bashrc
+   - run:
+      name: Install appengine sdk.
+      command: |
+       wget https://storage.googleapis.com/appengine-sdks/featured/go_appengine_sdk_linux_amd64-1.9.61.zip
+       unzip go_appengine_sdk_linux_amd64-1.9.61.zip -d $HOME
+   - run:
+      name: cd project root directory.
+      command: cd $GOPATH/src/github.com/SekiguchiKai/batch_bq_task_gcp
+   - run:
+      name: Execute server_setup.sh. $GOPATH/src/github.com/SekiguchiKai/batch_bq_task_gcp
+      command: ./scripts/server_setup.sh
+   - run:
+      name: Run Server Unit Tests. $GOPATH/src/github.com/SekiguchiKai/batch_bq_task_gcp
+      command: ./scripts/server_test.sh
+
+ client-build:
+  docker:
+   - image: circleci/node:8.6.0
+  environment:
+   TZ: /usr/share/zoneinfo/Asia/Tokyo
+  working_directory: /home/circleci/go/src/github.com/SekiguchiKai/batch_bq_task_gcp
+  steps: # PJで依存していて、ローカルでも必要なものはshell scriptで、そうでないものはベタがきで
+   - checkout # sshでgit hubやるときはなしで
+   - run:
+      name: Execute client_setup.sh. /home/circleci/go/src/github.com/SekiguchiKai/batch_bq_task_gcp/client
+      command: ./scripts/client_setup.sh /home/circleci/go/src/github.com/SekiguchiKai/batch_bq_task_gcp/client
+   - run:
+      name: Run Client Unit Tests. /home/circleci/go/src/github.com/SekiguchiKai/batch_bq_task_gcp/client
+      command: ./scripts/client_test.sh /home/circleci/go/src/github.com/SekiguchiKai/batch_bq_task_gcp/client
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - client-build
