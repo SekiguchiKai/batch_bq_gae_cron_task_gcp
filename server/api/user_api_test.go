@@ -3,12 +3,28 @@ package api
 import (
 	"google.golang.org/appengine/aetest"
 	"testing"
+
+	"net/http"
+	"github.com/gin-gonic/gin"
+	"github.com/SekiguchiKai/GAE_Go_Cursor/api"
+	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
 )
 
 // aetest.Instanceのwrapper。
 type userTestHelper struct {
 	inst aetest.Instance
 }
+
+
+// gin.TestModeで、UserAPI起動する。
+func (userTestHelper) newInitializedHandler() http.Handler {
+	gin.SetMode(gin.TestMode)
+	g := gin.New()
+	api.InitUserAPI(g.Group(util.GetApiPath()))
+
+	return g
+}
+
 
 
 
