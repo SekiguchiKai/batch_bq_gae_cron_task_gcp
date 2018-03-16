@@ -5,10 +5,31 @@ import (
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/model"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
 	"errors"
+	"net/http"
+	"time"
 )
 
 func createUser(c *gin.Context) {
-	
+	util.InfoLog(c.Request, "createUser is called")
+
+	var u model.User
+	if err := bindUserFromJson(c, &u); err != nil {
+		util.RespondAndLog(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	u = model.NewUser(u)
+	u.CreatedAt = time.Now().UTC()
+	u.UpdatedAt = time.Now().UTC()
+
+	util.InfoLog(c.Request, "u :%+v", u)
+
+	if err := validateParamsForUser(u); err != nil {
+		util.RespondAndLog(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+
 
 }
 
