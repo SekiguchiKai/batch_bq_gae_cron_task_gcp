@@ -55,6 +55,12 @@ func (s UserStore)PutUser(u model.User)error {
 
 }
 
+// 与えられたIDのUserがDatastore内に存在するかどうかを確認する。
+func (s UserStore) ExistsUser(id string) (bool, error) {
+	var dst model.User
+	return s.GetUser(id, &dst)
+}
+
 
 
 // UserKind用のdatastore.Keyを発行する。
