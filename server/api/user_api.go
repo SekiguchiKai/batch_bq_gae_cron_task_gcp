@@ -7,6 +7,8 @@ import (
 	"errors"
 	"net/http"
 	"time"
+	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/store"
+	"context"
 )
 
 func createUser(c *gin.Context) {
@@ -18,16 +20,20 @@ func createUser(c *gin.Context) {
 		return
 	}
 
+	if err := validateParamsForUser(u); err != nil {
+		util.RespondAndLog(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+
 	u = model.NewUser(u)
 	u.CreatedAt = time.Now().UTC()
 	u.UpdatedAt = time.Now().UTC()
 
 	util.InfoLog(c.Request, "u :%+v", u)
 
-	if err := validateParamsForUser(u); err != nil {
-		util.RespondAndLog(c, http.StatusBadRequest, err.Error())
-		return
-	}
+
+
 
 
 

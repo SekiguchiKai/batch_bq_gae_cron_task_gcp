@@ -25,11 +25,27 @@ func NewUserStoreWithContext(ctx context.Context) UserStore {
 	return UserStore{ctx: ctx}
 }
 
+// idで指定したUserをdstにloadする。
+func (s UserStore) GetUser(id string, dst *model.User) (exists bool, e error) {
+	if id == "" {
+		return false, nil
+	}
+
+	key := s.newUserKey(id)
+	if err := datastore.Get(s.ctx, key, dst); err != nil {
+		if err != datastore.ErrNoSuchEntity {
+			return false, err
+		}
+		return false, nil
+	}
+	return true, nil
+}
+
 // DatastoreにUserを格納する。
 func (s UserStore)PutUser(u model.User)error {
 	util.InfoLogWithContext(s.ctx, "PutUser is called")
 
-	key := s.newUserStoreKey(u.ID)
+	key := s.newUserKey(u.ID)
 
 	if _, err :=  datastore.Put(s.ctx, key, u); err != nil {
 		return err
@@ -39,7 +55,9 @@ func (s UserStore)PutUser(u model.User)error {
 
 }
 
+
+
 // UserKind用のdatastore.Keyを発行する。
-func (s UserStore) newUserStoreKey(id string) *datastore.Key {
+func (s UserStore) newUserKey(id string) *datastore.Key {
 	return datastore.NewKey(s.ctx, _UserKind, id, 0, nil)
 }
