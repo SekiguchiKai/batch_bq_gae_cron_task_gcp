@@ -26,6 +26,12 @@ type User struct {
 	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
+// IDを付与して、新しいUserを作成する
+func NewUser(u User) User {
+	u.ID = newUserID(u.UserName)
+	return u
+}
+
 // UserのIDを発行する
 func newUserID(userName string) string {
 	return util.GetHash(userName)
