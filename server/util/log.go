@@ -7,7 +7,18 @@ import (
 	"google.golang.org/appengine/log"
 	"net/http"
 	"google.golang.org/appengine"
+	"github.com/gin-gonic/gin"
 )
+
+// レスポンスと共にログを排出する。
+func RespondAndLog(c *gin.Context, code int, format string, values ...interface{}) {
+	if code >= 500 {
+		ErrorLog(c.Request, format, values...)
+	} else if code >= 400 {
+		InfoLog(c.Request, format, values...)
+	}
+	c.String(code, format, values...)
+}
 
 // Errorレベルのログを吐き出す。
 func ErrorLog(r *http.Request, format string, args ...interface{}) {
