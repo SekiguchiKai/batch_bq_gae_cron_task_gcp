@@ -32,6 +32,16 @@ func NewUser(u User) User {
 	return u
 }
 
+// Userの情報を更新する
+func UpdateUser(original, param User) User {
+	original.MailAddress = param.MailAddress
+	original.Age = param.Age
+	original.Gender = param.Gender
+	original.From = param.From
+
+	return original
+}
+
 // UserのIDを発行する
 func newUserID(userName string) string {
 	return util.GetHash(userName)
