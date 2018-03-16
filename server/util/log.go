@@ -9,6 +9,17 @@ import (
 	"google.golang.org/appengine"
 )
 
+// Warningレベルのログを吐き出す。
+func WarningLog(r *http.Request, format string, args ...interface{}) {
+	_, file, line, ok := runtime.Caller(1)
+	if !ok {
+		file = "nofile"
+		line = -1
+	}
+
+	ctx := appengine.NewContext(r)
+	log.Warningf(ctx, file+":"+strconv.Itoa(line)+":"+format, args...)
+}
 
 // Infoレベルのログを吐き出す。
 func InfoLog(r *http.Request, format string, args ...interface{}) {
