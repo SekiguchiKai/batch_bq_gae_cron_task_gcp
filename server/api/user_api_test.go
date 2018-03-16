@@ -8,6 +8,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/SekiguchiKai/GAE_Go_Cursor/api"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
+	"io"
+	"bytes"
+	"encoding/json"
+	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/model"
 )
 
 // aetest.Instanceのwrapper。
@@ -15,6 +19,13 @@ type userTestHelper struct {
 	inst aetest.Instance
 }
 
+
+// 引数で与えられたUserのインスタンスをjsonにし、io.Readerにして返す。
+func (h userTestHelper) newRequestBodyFromUserInstance(param model.User) io.Reader {
+	b, _ := json.Marshal(param)
+
+	return bytes.NewReader(b)
+}
 
 // gin.TestModeで、UserAPI起動する。
 func (userTestHelper) newInitializedHandler() http.Handler {
