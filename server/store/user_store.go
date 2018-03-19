@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"google.golang.org/appengine/datastore"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/model"
-	"ana-ccs/glm/server/util"
+	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
 )
 
 const _UserKind = "User"
