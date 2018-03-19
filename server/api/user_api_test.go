@@ -71,6 +71,14 @@ func TestCreateUser(t *testing.T) {
 
 
 
+
+
 	})
 
+}
+
+// Datastore内のUser KindのEntityを全て削除する
+func (h userTestHelper) clear() {
+	adminHelper := NewApiTestHelper(h.inst)
+	adminHelper.ClearEntity("User")
 }
