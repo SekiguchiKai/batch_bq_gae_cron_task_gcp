@@ -6,7 +6,6 @@ import (
 
 	"net/http"
 	"github.com/gin-gonic/gin"
-	"github.com/SekiguchiKai/GAE_Go_Cursor/api"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
 	"io"
 	"bytes"
@@ -24,7 +23,7 @@ type userTestHelper struct {
 // UserAPIを起動して、POSTでリクエストする。
 // 回答として、Status Code、レスポンスBodyを返す。
 func (h userTestHelper) requestPostToUserAPI(param model.User) (int, string) {
-	path := util.GetApiPath() + "/user/" + "/new"
+	path := util.GetApiPath() + "/user/" + "new"
 
 	// ResponseRecorderを作成
 	w := httptest.NewRecorder()
@@ -53,7 +52,7 @@ func (h userTestHelper) newRequestBodyFromUserInstance(param model.User) io.Read
 func (userTestHelper) newInitializedHandler() http.Handler {
 	gin.SetMode(gin.TestMode)
 	g := gin.New()
-	api.InitUserAPI(g.Group(util.GetApiPath()))
+	InitUserAPI(g.Group(util.GetApiPath()))
 
 	return g
 }
@@ -72,13 +71,15 @@ func TestCreateUser(t *testing.T) {
 		helper := userTestHelper{inst}
 
 
-		t.Run("全てのパラメータが正常な場合は200OKになること", func(t *testing.T) {
+		t.Run("リクエストボディの全パラメータが正常な場合は200OKになること", func(t *testing.T) {
 			defer helper.clear()
 
-			status, _ := helper.requestPostToUserAPI(helper.newUserParam())
+			status, body := helper.requestPostToUserAPI(helper.newUserParam())
 
 			if status != http.StatusOK {
 				t.Errorf("status = %d, wants = %d", status, http.StatusOK)
+				t.Errorf("response = %s", body)
+
 			}
 		})
 
