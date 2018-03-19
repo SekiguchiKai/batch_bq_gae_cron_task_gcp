@@ -12,12 +12,34 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/model"
+	"net/http/httptest"
+	"io/ioutil"
 )
 
 // aetest.Instanceのwrapper。
 type userTestHelper struct {
 	inst aetest.Instance
 }
+
+// UserAPIを起動して、POSTでリクエストする。
+// 回答として、Status Code、レスポンスBodyを返す。
+func (h userTestHelper) requestPostToUserAPI(versionID string, param model.User) (int, string) {
+	path := util.GetApiPath() + "/user/" + "/new"
+
+	// ResponseRecorderを作成
+	w := httptest.NewRecorder()
+	// リクエストを作成
+	r, _ := h.inst.NewRequest("POST", path, h.newRequestBodyFromUserInstance(param))
+
+	// gin.TestModeで、UserAPI起動し、serveしておく
+	h.newInitializedHandler().ServeHTTP(w, r)
+
+	// レスポンスBodyを読み込み
+	b, _ := ioutil.ReadAll(w.Body)
+
+	return w.Code, string(b)
+}
+
 
 
 // 引数で与えられたUserのインスタンスをjsonにし、io.Readerにして返す。
@@ -46,8 +68,6 @@ func TestCreateUser(t *testing.T) {
 			t.Fatalf("Failed to create instance: %v", err)
 		}
 		defer inst.Close()
-
-
 
 
 
