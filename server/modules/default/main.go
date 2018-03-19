@@ -1,14 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"github.com/gin-gonic/gin"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/api"
-	"net/http"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
-
-
 
 // エントリポイント
 func init() {
