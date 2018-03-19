@@ -83,6 +83,24 @@ func TestCreateUser(t *testing.T) {
 			}
 		})
 
+		t.Run("既に登録済みのuserNameの場合はNotUniqueErrMessageエラーになること", func(t *testing.T) {
+			defer helper.clear()
+
+			// 既に登録済みのuserNameの状態を作成するために、まず1回登録する
+			_, _ = helper.requestPostToUserAPI(helper.newUserParam())
+			// 2回目の登録
+			status, msg := helper.requestPostToUserAPI(helper.newUserParam())
+			if status != http.StatusBadRequest {
+				t.Errorf("status = %d, wants = %d", status, http.StatusBadRequest)
+			}
+			if msg != util.CreateErrMessage(_NotUniqueErrMessage).Error() {
+				t.Errorf("Body = %s, wants = %s", msg, util.CreateErrMessage(_NotUniqueErrMessage).Error())
+			}
+		})
+
+
+
+
 
 
 	})
