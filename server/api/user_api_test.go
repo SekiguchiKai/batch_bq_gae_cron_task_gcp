@@ -23,7 +23,7 @@ type userTestHelper struct {
 
 // UserAPIを起動して、POSTでリクエストする。
 // 回答として、Status Code、レスポンスBodyを返す。
-func (h userTestHelper) requestPostToUserAPI(versionID string, param model.User) (int, string) {
+func (h userTestHelper) requestPostToUserAPI(param model.User) (int, string) {
 	path := util.GetApiPath() + "/user/" + "/new"
 
 	// ResponseRecorderを作成
@@ -69,12 +69,34 @@ func TestCreateUser(t *testing.T) {
 		}
 		defer inst.Close()
 
+		helper := userTestHelper{inst}
 
+
+		t.Run("全てのパラメータが正常な場合は200OKになること", func(t *testing.T) {
+			defer helper.clear()
+
+			status, _ := helper.requestPostToUserAPI(helper.newUserParam())
+
+			if status != http.StatusOK {
+				t.Errorf("status = %d, wants = %d", status, http.StatusOK)
+			}
+		})
 
 
 
 	})
 
+}
+
+// parameter用のmodel.Userを作成する
+func (userTestHelper) newUserParam() model.User {
+	return model.User{
+		UserName   : "太郎",
+		MailAddress : "sample@test.mail",
+		Age         : 20,
+		Gender      : model.Male,
+		From        : "japan",
+	}
 }
 
 // Datastore内のUser KindのEntityを全て削除する
