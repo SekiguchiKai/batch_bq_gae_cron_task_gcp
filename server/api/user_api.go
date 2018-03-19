@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"errors"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/model"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/store"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
