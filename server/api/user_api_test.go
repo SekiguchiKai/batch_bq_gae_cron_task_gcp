@@ -4,15 +4,16 @@ import (
 	"google.golang.org/appengine/aetest"
 	"testing"
 
-	"net/http"
-	"github.com/gin-gonic/gin"
-	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
-	"io"
 	"bytes"
 	"encoding/json"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/model"
-	"net/http/httptest"
+	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
+	"github.com/gin-gonic/gin"
+	"io"
 	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
+	"strconv"
 )
 
 // aetest.Instanceのwrapper。
@@ -39,8 +40,6 @@ func (h userTestHelper) requestPostToUserAPI(param model.User) (int, string) {
 	return w.Code, string(b)
 }
 
-
-
 // 引数で与えられたUserのインスタンスをjsonにし、io.Readerにして返す。
 func (h userTestHelper) newRequestBodyFromUserInstance(param model.User) io.Reader {
 	b, _ := json.Marshal(param)
@@ -57,9 +56,6 @@ func (userTestHelper) newInitializedHandler() http.Handler {
 	return g
 }
 
-
-
-
 func TestCreateUser(t *testing.T) {
 	t.Run("User登録", func(t *testing.T) {
 		inst, err := aetest.NewInstance(&aetest.Options{StronglyConsistentDatastore: true}) // strongly consistentにする
@@ -69,7 +65,6 @@ func TestCreateUser(t *testing.T) {
 		defer inst.Close()
 
 		helper := userTestHelper{inst}
-
 
 		t.Run("リクエストボディの全パラメータが正常な場合は200OKになること", func(t *testing.T) {
 			defer helper.clear()
@@ -98,10 +93,33 @@ func TestCreateUser(t *testing.T) {
 			}
 		})
 
+		t.Run("必須項目が空の場合は400エラーになり、エラーメッセージが適切に返却されること", func(t *testing.T) {
+			defer helper.clear()
 
+			requiredParams := []string{
+				_UserName,
+				_MailAddress,
+				_Age,
+				_Gender,
+				_From,
+			}
+			for _, requiredParam := range requiredParams {
+				t.Run(requiredParam, func(t *testing.T) {
+					param := helper.newUserParam()
+					param = helper.deleteProperty(param, requiredParam)
+					status, msg := helper.requestPostToUserAPI(param)
 
-
-
+					if status != http.StatusBadRequest {
+						t.Errorf("status = %d, wants = %d", status, http.StatusBadRequest)
+					}
+					if requiredParam == _Age && msg == util.CreateErrMessage(requiredParam, _ShouldBeOver, strconv.Itoa(0)).Error() {
+						t.Errorf("Body = %s, wants not ShouldBeOver MSG", msg)
+					} else if msg == util.CreateErrMessage(requiredParam, _RequiredErrMessage).Error() {
+						t.Errorf("Body = %s, wants not RequiredErrMessage MSG", msg)
+					}
+				})
+			}
+		})
 
 	})
 
@@ -110,11 +128,11 @@ func TestCreateUser(t *testing.T) {
 // parameter用のmodel.Userを作成する
 func (userTestHelper) newUserParam() model.User {
 	return model.User{
-		UserName   : "太郎",
-		MailAddress : "sample@test.mail",
-		Age         : 20,
-		Gender      : model.Male,
-		From        : "japan",
+		UserName:    "太郎",
+		MailAddress: "sample@test.mail",
+		Age:         20,
+		Gender:      model.Male,
+		From:        "japan",
 	}
 }
 
@@ -122,4 +140,21 @@ func (userTestHelper) newUserParam() model.User {
 func (h userTestHelper) clear() {
 	adminHelper := NewApiTestHelper(h.inst)
 	adminHelper.ClearEntity("User")
+}
+
+// 指定された構造体のインスタンスのPropertyを削除する
+func (userTestHelper) deleteProperty(param model.User, propName string) model.User {
+	switch propName {
+	case _UserName:
+		param.UserName = _EMPTY
+	case _MailAddress:
+		param.MailAddress = _EMPTY
+	case _Age:
+		param.Age = -1
+	case _Gender:
+		param.Gender = _EMPTY
+	case _From:
+		param.From = _EMPTY
+	}
+	return param
 }
