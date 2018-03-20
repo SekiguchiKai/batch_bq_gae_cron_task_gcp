@@ -131,7 +131,7 @@ func (userTestHelper) newUserParam() model.User {
 		UserName:    "太郎",
 		MailAddress: "sample@test.mail",
 		Age:         20,
-		Gender:      model.Male,
+		Gender:      "Male",
 		From:        "japan",
 	}
 }
