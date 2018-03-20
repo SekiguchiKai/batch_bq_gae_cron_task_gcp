@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/model"
+	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/store"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
 	"github.com/gin-gonic/gin"
 	"io"
@@ -114,9 +115,9 @@ func TestCreateUser(t *testing.T) {
 						t.Errorf("status = %d, wants = %d", status, http.StatusBadRequest)
 					}
 					if requiredParam == _Age && msg == util.CreateErrMessage(requiredParam, _ShouldBeOver, strconv.Itoa(0)).Error() {
-						t.Errorf("Body = %s, wants not ShouldBeOver MSG", msg)
+						t.Errorf("wants = %s, actual = %s", util.CreateErrMessage(requiredParam, _ShouldBeOver, strconv.Itoa(0)), msg)
 					} else if msg == util.CreateErrMessage(requiredParam, _RequiredErrMessage).Error() {
-						t.Errorf("Body = %s, wants not RequiredErrMessage MSG", msg)
+						t.Errorf("wants = %s, actual = %s", util.CreateErrMessage(requiredParam, _ShouldBeOver, strconv.Itoa(0)), msg)
 					}
 				})
 			}
@@ -140,7 +141,7 @@ func (userTestHelper) newUserParam() model.User {
 // Datastore内のUser KindのEntityを全て削除する
 func (h userTestHelper) clear() {
 	adminHelper := NewApiTestHelper(h.inst)
-	adminHelper.ClearEntity("User")
+	adminHelper.ClearEntity(store.UserKind)
 }
 
 // 指定された構造体のインスタンスのPropertyを削除する
