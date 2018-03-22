@@ -1,8 +1,8 @@
 package api
 
 import (
-	"google.golang.org/appengine/aetest"
 	"google.golang.org/appengine"
+	"google.golang.org/appengine/aetest"
 	"google.golang.org/appengine/datastore"
 	"net/http"
 )
@@ -14,7 +14,6 @@ type ApiTestHelper struct {
 func NewApiTestHelper(inst aetest.Instance) ApiTestHelper {
 	return ApiTestHelper{inst: inst}
 }
-
 
 // DatastoreのKindからEntityを削除する
 func (h ApiTestHelper) ClearEntity(entityName string) {
@@ -30,4 +29,12 @@ func (h ApiTestHelper) ClearEntity(entityName string) {
 func (h ApiTestHelper) request() *http.Request {
 	r, _ := h.inst.NewRequest("GET", "", nil)
 	return r
+}
+
+// EntityのKeyを取得する
+func (h ApiTestHelper) GetEntityKey(entityName string, order string) *datastore.Key {
+	ctx := appengine.NewContext(h.request())
+	q := datastore.NewQuery(entityName).Order(order).KeysOnly().Limit(1)
+	keys, _ := q.GetAll(ctx, nil)
+	return keys[0]
 }
