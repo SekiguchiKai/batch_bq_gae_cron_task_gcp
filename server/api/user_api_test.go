@@ -17,6 +17,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strconv"
+	"time"
 )
 
 // aetest.Instanceのwrapper。
@@ -66,6 +67,8 @@ func TestCreateUser(t *testing.T) {
 			t.Fatalf("Failed to create instance: %v", err)
 		}
 		defer inst.Close()
+
+		apiHelper := NewApiTestHelper(inst)
 
 		helper := userTestHelper{inst}
 
@@ -163,6 +166,18 @@ func TestCreateUser(t *testing.T) {
 				}
 			})
 
+		})
+
+		t.Run("UpdatedAtに適切なシステム日時が設定されること", func(t *testing.T) {
+			defer helper.clear()
+
+			helper.requestPostToUserAPI(helper.newUserParam())
+
+			now := time.Now().UTC()
+			a := helper.getLatestUser()
+			if !apiHelper.IsValidUpdatedAt(a.UpdatedAt, now) {
+				t.Errorf("UpdatedAt = %v, now = %v", a.UpdatedAt, now)
+			}
 		})
 
 	})
