@@ -21,7 +21,7 @@ const (
 
 // UserAPIを初期化する。
 func InitUserAPI(g *gin.RouterGroup) {
-	g.POST("user/new", createUser)
+	g.POST("/user/new", createUser)
 }
 
 // リクエストで受け取ったUserをDatastoreに新たに格納する。

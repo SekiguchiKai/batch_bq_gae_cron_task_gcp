@@ -140,8 +140,8 @@ func (userTestHelper) newUserParam() model.User {
 
 // Datastore内のUser KindのEntityを全て削除する
 func (h userTestHelper) clear() {
-	adminHelper := NewApiTestHelper(h.inst)
-	adminHelper.ClearEntity(store.UserKind)
+	apiHelper := NewApiTestHelper(h.inst)
+	apiHelper.ClearEntity(store.UserKind)
 }
 
 // 指定された構造体のインスタンスのPropertyを削除する
