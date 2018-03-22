@@ -1,6 +1,8 @@
 package api
 
 import (
+	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/model"
+	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/store"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/aetest"
 	"google.golang.org/appengine/datastore"
@@ -29,6 +31,16 @@ func (h ApiTestHelper) ClearEntity(entityName string) {
 func (h ApiTestHelper) request() *http.Request {
 	r, _ := h.inst.NewRequest("GET", "", nil)
 	return r
+}
+
+// Datastoreに格納されている最新のUserのEntityを取得する
+func (h ApiTestHelper) GetLatestUser() model.User {
+	key := h.GetEntityKey(store.UserKind, "-UpdatedAt")
+	ctx := appengine.NewContext(h.request())
+	var dst model.User
+	datastore.Get(ctx, key, &dst)
+
+	return dst
 }
 
 // EntityのKeyを取得する
