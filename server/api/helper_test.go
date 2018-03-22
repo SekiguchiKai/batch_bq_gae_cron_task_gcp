@@ -5,6 +5,7 @@ import (
 	"google.golang.org/appengine/aetest"
 	"google.golang.org/appengine/datastore"
 	"net/http"
+	"time"
 )
 
 type ApiTestHelper struct {
@@ -37,4 +38,17 @@ func (h ApiTestHelper) GetEntityKey(entityName string, order string) *datastore.
 	q := datastore.NewQuery(entityName).Order(order).KeysOnly().Limit(1)
 	keys, _ := q.GetAll(ctx, nil)
 	return keys[0]
+}
+
+// UpdatedAtが有効な値かどうかを確認する
+// 1分以内ならば、有効なUpdatedAtとして考える
+func (ApiTestHelper) IsValidUpdatedAt(updatedAt, now time.Time) bool {
+	acceptedUpdatedAtInterval := time.Duration(1) * time.Minute
+
+	interval := now.Sub(updatedAt)
+	if interval < 0 {
+		interval = -interval
+	}
+
+	return interval <= acceptedUpdatedAtInterval
 }
