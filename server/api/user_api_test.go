@@ -73,7 +73,7 @@ func TestCreateUser(t *testing.T) {
 			status, body := helper.requestPostToUserAPI(helper.newUserParam())
 
 			if status != http.StatusOK {
-				t.Log("helper.newUserParam() = %+v", helper.newUserParam())
+				t.Log("helper.newUserParam = %+v", helper.newUserParam())
 				t.Errorf("status = %d, wants = %d", status, http.StatusOK)
 				t.Errorf("response = %s", body)
 
@@ -133,7 +133,7 @@ func (userTestHelper) newUserParam() model.User {
 		UserName:    "太郎",
 		MailAddress: "sample@test.mail",
 		Age:         20,
-		Gender:      "Male",
+		Gender:      model.Female,
 		From:        "japan",
 	}
 }

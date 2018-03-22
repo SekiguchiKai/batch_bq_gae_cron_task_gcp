@@ -48,7 +48,7 @@ func (s UserStore) PutUser(u model.User) error {
 
 	key := s.newUserKey(u.ID)
 
-	if _, err := datastore.Put(s.ctx, key, u); err != nil {
+	if _, err := datastore.Put(s.ctx, key, &u); err != nil {
 		return err
 	}
 
