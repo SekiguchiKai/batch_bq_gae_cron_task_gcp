@@ -10,7 +10,6 @@ import (
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/store"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/tools/go/gcimporter15/testdata"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
 	"io"
