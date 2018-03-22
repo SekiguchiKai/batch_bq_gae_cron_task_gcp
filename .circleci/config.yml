@@ -34,7 +34,7 @@ jobs:
       command: ./scripts/server_setup.sh
    - run:
       name: Run Server Unit Tests. $GOPATH/src/github.com/SekiguchiKai/batch_bq_task_gcp
-      command: ./scripts/server_test.sh
+      command: ./scripts/server_test.sh $GOPATH/src/github.com/SekiguchiKai/batch_bq_task_gcp/server
 
 
 
