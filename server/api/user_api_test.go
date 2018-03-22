@@ -10,6 +10,7 @@ import (
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/store"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/tools/go/gcimporter15/testdata"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
 	"io"
@@ -131,7 +132,37 @@ func TestCreateUser(t *testing.T) {
 			param := helper.newUserParam()
 			helper.requestPostToUserAPI(param)
 
-			//u := helper.
+			u := helper.getLatestUser()
+
+			t.Run(_UserName, func(t *testing.T) {
+				if u.UserName != param.UserName {
+					t.Errorf("want = %s, actual = %s", param.UserName, u.UserName)
+				}
+			})
+
+			t.Run(_MailAddress, func(t *testing.T) {
+				if u.MailAddress != param.MailAddress {
+					t.Errorf("want = %s, actual = %s", param.MailAddress, u.MailAddress)
+				}
+			})
+
+			t.Run(_Age, func(t *testing.T) {
+				if u.Age != param.Age {
+					t.Errorf("want = %d, actual = %d", param.Age, u.Age)
+				}
+			})
+
+			t.Run(_Gender, func(t *testing.T) {
+				if u.Gender != param.Gender {
+					t.Errorf("want = %s, actual = %s", param.Gender, u.Gender)
+				}
+			})
+
+			t.Run(_From, func(t *testing.T) {
+				if u.From != param.From {
+					t.Errorf("want = %s, actual = %s", param.From, u.From)
+				}
+			})
 
 		})
 
