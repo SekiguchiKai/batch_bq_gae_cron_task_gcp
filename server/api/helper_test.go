@@ -1,8 +1,6 @@
 package api
 
 import (
-	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/model"
-	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/store"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/aetest"
 	"google.golang.org/appengine/datastore"
