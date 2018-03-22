@@ -114,7 +114,7 @@ func TestCreateUser(t *testing.T) {
 					if status != http.StatusBadRequest {
 						t.Errorf("status = %d, wants = %d", status, http.StatusBadRequest)
 					}
-					if requiredParam == _Age && msg == util.CreateErrMessage(requiredParam, _ShouldBeOver, strconv.Itoa(0)).Error() {
+					if requiredParam == _Age && msg != util.CreateErrMessage(requiredParam, _ShouldBeOver, strconv.Itoa(0)).Error() {
 						t.Errorf("wants = %s, actual = %s", util.CreateErrMessage(requiredParam, _ShouldBeOver, strconv.Itoa(0)).Error(), msg)
 					} else if requiredParam != _Age && msg != util.CreateErrMessage(requiredParam, _RequiredErrMessage).Error() {
 						t.Errorf("wants = %s, actual = %s", util.CreateErrMessage(requiredParam, _RequiredErrMessage), msg)
