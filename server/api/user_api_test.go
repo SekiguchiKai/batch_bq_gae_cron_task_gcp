@@ -10,6 +10,8 @@ import (
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/store"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
 	"github.com/gin-gonic/gin"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/datastore"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -123,6 +125,16 @@ func TestCreateUser(t *testing.T) {
 			}
 		})
 
+		t.Run("各項目にパラメータで渡された値が設定されること", func(t *testing.T) {
+			defer helper.clear()
+
+			param := helper.newUserParam()
+			helper.requestPostToUserAPI(param)
+
+			//u := helper.
+
+		})
+
 	})
 
 }
@@ -159,4 +171,16 @@ func (userTestHelper) deleteProperty(param model.User, propName string) model.Us
 		param.From = _EMPTY
 	}
 	return param
+}
+
+// Datastoreに格納されている最新のUserのEntityを取得する
+func (h userTestHelper) getLatestUser() model.User {
+	apiHelper := NewApiTestHelper(h.inst)
+	key := apiHelper.GetEntityKey(store.UserKind, "-UpdatedAt")
+
+	ctx := appengine.NewContext(apiHelper.request())
+	var dst model.User
+	datastore.Get(ctx, key, &dst)
+
+	return dst
 }

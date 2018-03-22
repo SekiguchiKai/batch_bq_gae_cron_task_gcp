@@ -33,16 +33,6 @@ func (h ApiTestHelper) request() *http.Request {
 	return r
 }
 
-// Datastoreに格納されている最新のUserのEntityを取得する
-func (h ApiTestHelper) GetLatestUser() model.User {
-	key := h.GetEntityKey(store.UserKind, "-UpdatedAt")
-	ctx := appengine.NewContext(h.request())
-	var dst model.User
-	datastore.Get(ctx, key, &dst)
-
-	return dst
-}
-
 // EntityのKeyを取得する
 func (h ApiTestHelper) GetEntityKey(entityName string, order string) *datastore.Key {
 	ctx := appengine.NewContext(h.request())
