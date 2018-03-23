@@ -26,6 +26,16 @@ func NewUserStoreWithContext(ctx context.Context) UserStore {
 	return UserStore{ctx: ctx}
 }
 
+// Userを全て取得する
+func (s UserStore) GetAllUsers(dst *[]model.User) error {
+	q := datastore.NewQuery(UserKind).Limit(10000)
+	if _, err := q.GetAll(s.ctx, &dst); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // idで指定したUserをdstにloadする。
 func (s UserStore) GetUser(id string, dst *model.User) (exists bool, e error) {
 	if id == "" {
