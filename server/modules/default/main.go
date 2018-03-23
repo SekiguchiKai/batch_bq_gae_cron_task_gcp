@@ -12,6 +12,7 @@ import (
 func init() {
 	g := gin.New()
 	initAPI(g)
+	initTaskAPI(g)
 	// gin.New()の戻り値のEngineは、ServeHTTP(ResponseWriter, *Request)メソッドを持っているので、
 	// type Handler interfaceを満たす
 	http.Handle("/", g)
