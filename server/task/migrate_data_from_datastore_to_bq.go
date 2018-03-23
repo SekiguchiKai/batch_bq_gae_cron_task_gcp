@@ -46,9 +46,14 @@ func migrateDataFromDatastoreToBQ(c *gin.Context) {
 			util.RespondAndLog(c, http.StatusInternalServerError, err.Error())
 			return
 		}
+		// Datastoreの余分なデータを消す
+		if err := s.DeleteUser(user.ID); err != nil {
+			util.RespondAndLog(c, http.StatusInternalServerError, err.Error())
+			return
+		}
 
 	}
 
-	// Datastoreの余分なデータを消す
+	c.JSON(http.StatusOK, nil)
 
 }
