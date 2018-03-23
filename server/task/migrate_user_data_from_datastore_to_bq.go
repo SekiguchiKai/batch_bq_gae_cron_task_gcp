@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	_Dataset = "UserSample"
-	_Table   = "User"
+	_Dataset = "batch_bq_task_gcp"
+	_Table   = "user"
 )
 
 // MigrateUserDataFromDatastoreToBQを初期化する
