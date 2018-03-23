@@ -26,6 +26,16 @@ func NewUserStoreWithContext(ctx context.Context) UserStore {
 	return UserStore{ctx: ctx}
 }
 
+// Userを全て取得する
+func (s UserStore) GetAllUsers(dst *[]model.User) error {
+	q := datastore.NewQuery(UserKind).Limit(10000)
+	if _, err := q.GetAll(s.ctx, &dst); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // idで指定したUserをdstにloadする。
 func (s UserStore) GetUser(id string, dst *model.User) (exists bool, e error) {
 	if id == "" {
@@ -60,6 +70,12 @@ func (s UserStore) PutUser(u model.User) error {
 func (s UserStore) ExistsUser(id string) (bool, error) {
 	var dst model.User
 	return s.GetUser(id, &dst)
+}
+
+// 与えられたIDのUserを削除する
+func (s UserStore) DeleteUser(id string) error {
+	key := s.newUserKey(id)
+	return datastore.Delete(s.ctx, key)
 }
 
 // UserKind用のdatastore.Keyを発行する。
