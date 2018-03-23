@@ -15,12 +15,13 @@ const (
 	_Table   = "User"
 )
 
-func InitMigrateDataFromDatastoreToBQ(g *gin.RouterGroup) {
-
+// MigrateUserDataFromDatastoreToBQを初期化する
+func InitMigrateUserDataFromDatastoreToBQ(g *gin.RouterGroup) {
+	g.POST("migrateUserDataFromDatastoreToBQ", migrateUserDataFromDatastoreToBQ)
 }
 
 // DatastoreからBigQueryのTableに移し替える
-func migrateDataFromDatastoreToBQ(c *gin.Context) {
+func migrateUserDataFromDatastoreToBQ(c *gin.Context) {
 	util.InfoLog(c.Request, "migrateDataFromDatastoreToBQ is called")
 
 	// Datastoreからデータを取得する
