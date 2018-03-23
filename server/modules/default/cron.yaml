@@ -1,0 +1,5 @@
+cron:
+- description: migrate user data from Datastore to BigQuery.
+  url: /task/migrateUserDataFromDatastoreToBQ
+  schedule: every day 00:01
+  timezone: Asia/Tokyo

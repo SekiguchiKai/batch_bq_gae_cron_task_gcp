@@ -1,0 +1,18 @@
+runtime: go
+api_version: go1.8
+
+service: glm-backend
+
+instance_class: B8
+basic_scaling:
+  max_instances: 1
+  idle_timeout: 1m
+
+handlers:
+- url: /task/.*
+  script: _go_app
+  login: admin
+
+- url: /.*
+  script: _go_app
+  secure: always
