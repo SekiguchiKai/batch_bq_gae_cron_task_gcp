@@ -72,6 +72,12 @@ func (s UserStore) ExistsUser(id string) (bool, error) {
 	return s.GetUser(id, &dst)
 }
 
+// 与えられたIDのUserを削除する
+func (s UserStore) DeleteUser(id string) error {
+	key := s.newUserKey(id)
+	return datastore.Delete(s.ctx, key)
+}
+
 // UserKind用のdatastore.Keyを発行する。
 func (s UserStore) newUserKey(id string) *datastore.Key {
 	return datastore.NewKey(s.ctx, UserKind, id, 0, nil)
