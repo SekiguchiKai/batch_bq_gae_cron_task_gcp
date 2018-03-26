@@ -1,8 +1,9 @@
 package model
 
 import (
-	"time"
 	"github.com/SekiguchiKai/batch_bq_gae_cron_task_gcp/server/util"
+	"strconv"
+	"time"
 )
 
 type Gender string
@@ -45,4 +46,30 @@ func UpdateUser(original, param User) User {
 // UserのIDを発行する
 func newUserID(userName string) string {
 	return util.GetHash(userName)
+}
+
+// Userを構造体からSliceにする
+func TranslateStructToSlice(u User) []string {
+	const (
+		IDIndex = iota
+		UserNameIndex
+		MailAddressIndex
+		AgeIndex
+		GenderIndex
+		FromIndex
+		CreatedAtIndex
+		UpdatedAtIndex
+	)
+
+	s := make([]string, 8)
+	s[IDIndex] = u.ID
+	s[UserNameIndex] = u.UserName
+	s[MailAddressIndex] = u.MailAddress
+	s[AgeIndex] = strconv.Itoa(u.Age)
+	s[GenderIndex] = string(u.Gender)
+	s[FromIndex] = u.From
+	s[CreatedAtIndex] = u.CreatedAt.String()
+	s[UpdatedAtIndex] = u.UpdatedAt.String()
+
+	return s
 }
