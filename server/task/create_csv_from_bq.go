@@ -8,8 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/taskqueue"
+	"net/http"
 	"net/url"
 )
+
+// CreateCsvFromBigQuery Taskのエントリポイント
+func InitCreateCsvFromBigQuery(g *gin.RouterGroup) {
+	g.POST("/createCsvFromBigQuery", createCsvFromBigQuery)
+
+}
 
 // CreateCsvFromBigQueryを開始する
 func StartCreateCsvFromBigQuery(ctx context.Context, sql string) error {
@@ -35,7 +42,7 @@ func startCreateCsvFromBigQuery(ctx context.Context, queueName, sql string) erro
 }
 
 // BigQueryからデータを抽出し、抽出したデータからCSVを作成する
-func createCsvFromBigQuery(c *gin.Context, sql string) error {
+func createCsvFromBigQuery(c *gin.Context) {
 	util.InfoLog(c.Request, "createCsvFromBigQuery is called")
 
 	ctx := appengine.NewContext(c.Request)
@@ -43,12 +50,14 @@ func createCsvFromBigQuery(c *gin.Context, sql string) error {
 
 	bq, err := service.NewBQClientWrapper(ctx, prjID)
 	if err != nil {
-		return err
+		util.RespondAndLog(c, http.StatusInternalServerError, err.Error())
 	}
 
 	var users []model.User
+	sql := c.PostForm("sql")
+
 	if err := bq.QueryAndLoad(sql, &users); err != nil {
-		return err
+		util.RespondAndLog(c, http.StatusInternalServerError, err.Error())
 	}
 
 	util.InfoLog(c.Request, "users : %+v", users)
@@ -57,10 +66,10 @@ func createCsvFromBigQuery(c *gin.Context, sql string) error {
 		s := model.TranslateStructToSlice(user)
 
 		if err := util.WriteCsv(user.UserName, s); err != nil {
-			return err
+			util.RespondAndLog(c, http.StatusInternalServerError, err.Error())
 		}
 	}
 
-	return nil
+	c.JSON(http.StatusOK, nil)
 
 }
