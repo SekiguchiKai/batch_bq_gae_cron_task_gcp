@@ -11,6 +11,12 @@ import (
 	"net/url"
 )
 
+// CreateCsvFromBigQueryを開始する
+func StartCreateCsvFromBigQuery(ctx context.Context, sql string) error {
+	return startCreateCsvFromBigQuery(ctx, CreateCsvFromBigQueryQueue, sql)
+
+}
+
 // createCsvFromBigQueryをTaskQueueのTaskに追加する
 func startCreateCsvFromBigQuery(ctx context.Context, queueName, sql string) error {
 	util.InfoLogWithContext(ctx, "startCreateCsvFromBigQuery is called")
