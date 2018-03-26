@@ -48,7 +48,6 @@ func NewGCSClientWrapperReader(r *http.Request, bucketName, path string) (io.Rea
 // 新規にGCSClientWrapperWriterを作成する
 func NewGCSClientWrapperWriter(r *http.Request, bucketName, path, contentType string) (io.WriteCloser, error) {
 	ctx := appengine.NewContext(r)
-
 	client, err := storage.NewClient(ctx)
 	if err != nil {
 		return nil, err
