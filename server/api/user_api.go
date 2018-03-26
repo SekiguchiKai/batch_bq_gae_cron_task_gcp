@@ -88,6 +88,15 @@ func bindUserFromJson(c *gin.Context, dst *model.User) error {
 	return nil
 }
 
+// HTTPのリクエストボディのjsonデータUserに変換する。
+func bindUserForAnalyzeFromJson(c *gin.Context, dst *model.UserForAnalyze) error {
+	if err := c.BindJSON(dst); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // URIのIDを取得する。
 func getUserID(c *gin.Context) string {
 	return c.Param("id")
