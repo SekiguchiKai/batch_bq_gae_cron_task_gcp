@@ -1,0 +1,10 @@
+queue:
+- name: create-csv-from-big-query
+  bucket_size: 30
+  rate: 30/s
+  target: opd
+  retry_parameters:
+    task_retry_limit: 5
+    min_backoff_seconds: 30
+    max_doublings: 5
+

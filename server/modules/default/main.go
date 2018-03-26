@@ -28,4 +28,5 @@ func initAPI(g *gin.Engine) {
 func initTaskAPI(g *gin.Engine) {
 	taskGin := g.Group(util.GetTaskPath())
 	task.InitMigrateUserDataFromDatastoreToBQ(taskGin)
+	task.InitCreateCsvFromBigQuery(taskGin)
 }
