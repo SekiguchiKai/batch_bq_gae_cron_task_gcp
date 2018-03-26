@@ -4,6 +4,7 @@ import (
 	"cloud.google.com/go/bigquery"
 	"context"
 	"google.golang.org/api/iterator"
+	"reflect"
 )
 
 // bigquery.Clientをwrapする。
@@ -36,14 +37,14 @@ func (bq *BQClientWrapper) PutData(dataset, table string, src interface{}) error
 }
 
 // BigQueryにQueryを発行して、結果をロードする。
-func (bq *BQClientWrapper) QueryAndLoad(ctx context.Context, sql string, dst interface{}) error {
+func (bq *BQClientWrapper) QueryAndLoad(sql string, dst interface{}) error {
 	// SQLからQueryを発行する
 	query := bq.client.Query(sql)
 	// スタンダードSQLを使用する
 	query.QueryConfig.UseStandardSQL = true
 
 	// Queryを実行して、RowIteratorを取得
-	it, err := query.Read(ctx)
+	it, err := query.Read(bq.ctx)
 	if err != nil {
 		return err
 	}
