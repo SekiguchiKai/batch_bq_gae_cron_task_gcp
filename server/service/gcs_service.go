@@ -26,7 +26,7 @@ func (r *GCSClientWrapperReader) Close() error {
 }
 
 // 新規にGCSClientWrapperReaderを作成する
-func NewGCSClientWrapperReader(r *http.Request, path, bucketName string) (io.ReadCloser, error) {
+func NewGCSClientWrapperReader(r *http.Request, bucketName, path string) (io.ReadCloser, error) {
 	ctx := appengine.NewContext(r)
 
 	client, err := storage.NewClient(ctx)
@@ -43,4 +43,26 @@ func NewGCSClientWrapperReader(r *http.Request, path, bucketName string) (io.Rea
 
 	return &GCSClientWrapperReader{Reader: rc, client: client}, nil
 
+}
+
+// 新規にGCSClientWrapperWriterを作成する
+func NewGCSClientWrapperWriter(r *http.Request, bucketName, path, contentType string) (io.WriteCloser, error) {
+	ctx := appengine.NewContext(r)
+
+	client, err := storage.NewClient(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	bucket := client.Bucket(bucketName)
+
+	wc := bucket.Object(path).NewWriter(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if contentType != "" {
+		wc.ContentType = contentType
+	}
+
+	return &GCSClientWrapperWriter{Writer: wc, client: client}, nil
 }
