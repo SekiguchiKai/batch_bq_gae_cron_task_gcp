@@ -4,7 +4,6 @@ import (
 	"cloud.google.com/go/bigquery"
 	"context"
 	"google.golang.org/api/iterator"
-	"reflect"
 )
 
 // bigquery.Clientをwrapする。
