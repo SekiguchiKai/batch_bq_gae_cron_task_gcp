@@ -1,8 +1,10 @@
 package model
 
 import (
-	"testing"
 	"reflect"
+	"strconv"
+	"testing"
+	"time"
 )
 
 const (
@@ -73,6 +75,54 @@ func TestUpdateUser(t *testing.T) {
 
 			if !reflect.DeepEqual(actual, expected2) {
 				t.Errorf("actual : %+v, expected2 : %+v", actual, expected2)
+			}
+
+		})
+	})
+
+}
+
+func TestTranslateStructToSlice(t *testing.T) {
+	t.Run("TranslateStructToSlice", func(t *testing.T) {
+		t.Run("構造体Userを元に、そのフィールドの値を格納したstringのsliceが作成されること", func(t *testing.T) {
+			u := User{
+				UserName:    _TestUserName,
+				MailAddress: _TestMailAddress,
+				Age:         _TestAge,
+				Gender:      _TestGender,
+				From:        _TestFrom,
+			}
+
+			u = NewUser(u)
+			u.CreatedAt = time.Now().UTC()
+			u.UpdatedAt = time.Now().UTC()
+
+			s := TranslateStructToSlice(u)
+
+			if s[IDIndex] != u.ID {
+				t.Errorf("actual : %+v, expected : %+v", s[IDIndex], u.ID)
+			}
+			if s[UserNameIndex] != u.ID {
+				t.Errorf("actual : %+v, expected : %+v", s[UserNameIndex], u.UserName)
+			}
+			if s[MailAddressIndex] != u.MailAddress {
+				t.Errorf("actual : %+v, expected : %+v", s[MailAddressIndex], u.MailAddress)
+			}
+			if s[AgeIndex] != strconv.Itoa(u.Age) {
+				t.Errorf("actual : %+v, expected : %+v", s[AgeIndex], strconv.Itoa(u.Age))
+			}
+			if s[GenderIndex] != string(u.Gender) {
+				t.Errorf("actual : %+v, expected : %+v", s[GenderIndex], string(u.Gender))
+			}
+			if s[FromIndex] != u.From {
+				t.Errorf("actual : %+v, expected : %+v", s[FromIndex], u.From)
+			}
+			if s[CreatedAtIndex] != u.CreatedAt.String() {
+				t.Errorf("actual : %+v, expected : %+v", s[CreatedAtIndex], u.CreatedAt.String())
+			}
+
+			if s[UpdatedAtIndex] != u.UpdatedAt.String() {
+				t.Errorf("actual : %+v, expected : %+v", s[UpdatedAtIndex], u.UpdatedAt.String())
 			}
 
 		})

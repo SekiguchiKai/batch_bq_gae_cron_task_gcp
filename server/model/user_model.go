@@ -12,6 +12,16 @@ const (
 	Male   Gender = "Male"
 	Female Gender = "Female"
 )
+const (
+	IDIndex = iota
+	UserNameIndex
+	MailAddressIndex
+	AgeIndex
+	GenderIndex
+	FromIndex
+	CreatedAtIndex
+	UpdatedAtIndex
+)
 
 // UserのModel
 type User struct {
@@ -50,16 +60,6 @@ func newUserID(userName string) string {
 
 // Userを構造体からSliceにする
 func TranslateStructToSlice(u User) []string {
-	const (
-		IDIndex = iota
-		UserNameIndex
-		MailAddressIndex
-		AgeIndex
-		GenderIndex
-		FromIndex
-		CreatedAtIndex
-		UpdatedAtIndex
-	)
 
 	s := make([]string, 8)
 	s[IDIndex] = u.ID
