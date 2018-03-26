@@ -2,17 +2,22 @@ package service
 
 import (
 	"cloud.google.com/go/storage"
-	"context"
 )
 
 // storage.ClientをwrapするWriter
 type GCSClientWrapperReader struct {
-	ctx    context.Context
+	*storage.Reader
 	client *storage.Client
 }
 
 // storage.ClientをwrapするReader
 type GCSClientWrapperWriter struct {
-	ctx    context.Context
+	*storage.Writer
 	client *storage.Client
+}
+
+// ClientとReaderをCloseする
+func (r *GCSClientWrapperReader) Close() error {
+	defer r.client.Close()
+	return r.Reader.Close()
 }
