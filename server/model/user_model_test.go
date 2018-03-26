@@ -102,7 +102,7 @@ func TestTranslateStructToSlice(t *testing.T) {
 			if s[IDIndex] != u.ID {
 				t.Errorf("actual : %+v, expected : %+v", s[IDIndex], u.ID)
 			}
-			if s[UserNameIndex] != u.ID {
+			if s[UserNameIndex] != u.UserName {
 				t.Errorf("actual : %+v, expected : %+v", s[UserNameIndex], u.UserName)
 			}
 			if s[MailAddressIndex] != u.MailAddress {
