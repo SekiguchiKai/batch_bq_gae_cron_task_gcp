@@ -163,30 +163,30 @@ WHERE
 
 	sql := base
 
-	if u.UserNameField.Signal != "" && u.UserNameField.Value != "" {
+	if u.UserNameField.Signal != _Empty && u.UserNameField.Value != _Empty {
 		sql = sql + "UserName" + _Space + u.UserNameField.Signal + _Space + u.UserNameField.Value
 	}
-	if u.MailAddressField.Signal != "" && u.MailAddressField.Value != "" {
+	if u.MailAddressField.Signal != _Empty && u.MailAddressField.Value != _Empty {
 		sql = sql + "MailAddress" + _Space + u.MailAddressField.Signal + _Space + _DoubleQuotation + u.MailAddressField.Value + _DoubleQuotation
 	}
-	if u.AgeField.Signal != "" && strconv.Itoa(u.AgeField.Value) != "" {
+	if u.AgeField.Signal != _Empty && strconv.Itoa(u.AgeField.Value) != _Empty {
 		sql = sql + "Age" + _Space + u.AgeField.Signal + _Space + _DoubleQuotation + strconv.Itoa(u.AgeField.Value) + _DoubleQuotation
 	}
-	if u.GenderField.Signal != "" && u.GenderField.Value != "" {
+	if u.GenderField.Signal != _Empty && u.GenderField.Value != _Empty {
 		sql = sql + "Gender" + _Space + u.GenderField.Signal + _Space + _DoubleQuotation + u.GenderField.Value + _DoubleQuotation
 	}
-	if u.FromField.Signal != "" && u.FromField.Value != "" {
+	if u.FromField.Signal != _Empty && u.FromField.Value != _Empty {
 		sql = sql + "From" + _Space + u.FromField.Signal + _Space + _DoubleQuotation + u.FromField.Value + _DoubleQuotation
 	}
-	if u.CreatedAtField.Signal != "" && u.CreatedAtField.Value != "" {
+	if u.CreatedAtField.Signal != _Empty && u.CreatedAtField.Value != _Empty {
 		sql = sql + "CreatedAt" + _Space + u.CreatedAtField.Signal + _Space + _DoubleQuotation + u.CreatedAtField.Value + _DoubleQuotation
 	}
-	if u.UpdatedAtField.Signal != "" && u.UpdatedAtField.Value != "" {
+	if u.UpdatedAtField.Signal != _Empty && u.UpdatedAtField.Value != _Empty {
 		sql = sql + "UpdatedAt" + _Space + u.UpdatedAtField.Signal + _Space + _DoubleQuotation + u.UpdatedAtField.Value + _DoubleQuotation
 	}
 
 	if sql == base {
-		return "", errors.New("There is not value and signal")
+		return _Empty, errors.New("There is not value and signal")
 	}
 
 	return sql, nil
