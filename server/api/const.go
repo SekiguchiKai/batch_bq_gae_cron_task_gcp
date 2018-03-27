@@ -5,5 +5,7 @@ const (
 	_RequiredErrMessage  = " is required "
 	_NotUniqueErrMessage = "Not Unique"
 	_ShouldBeOver        = " should be over "
-	_EMPTY               = ""
+	_Empty               = ""
+	_Space               = " "
+	_DoubleQuotation     = "\""
 )

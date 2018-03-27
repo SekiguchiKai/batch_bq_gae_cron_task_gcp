@@ -205,15 +205,15 @@ func (h userTestHelper) clear() {
 func (userTestHelper) deleteProperty(param model.User, propName string) model.User {
 	switch propName {
 	case _UserName:
-		param.UserName = _EMPTY
+		param.UserName = _Empty
 	case _MailAddress:
-		param.MailAddress = _EMPTY
+		param.MailAddress = _Empty
 	case _Age:
 		param.Age = -1
 	case _Gender:
-		param.Gender = _EMPTY
+		param.Gender = _Empty
 	case _From:
-		param.From = _EMPTY
+		param.From = _Empty
 	}
 	return param
 }

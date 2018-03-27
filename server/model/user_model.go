@@ -37,6 +37,52 @@ type User struct {
 	UpdatedAt   time.Time `json:"updatedAt"`
 }
 
+type UserNameField struct {
+	Signal string
+	Value  string
+}
+
+type MailAddressField struct {
+	Signal string
+	Value  string
+}
+
+type AgeField struct {
+	Signal string
+	Value  int
+}
+
+type GenderField struct {
+	Signal string
+	Value  string
+}
+
+type FromField struct {
+	Signal string
+	Value  string
+}
+
+type CreatedAtField struct {
+	Signal string
+	Value  string
+}
+
+type UpdatedAtField struct {
+	Signal string
+	Value  string
+}
+
+// BigQueryの解析用
+type UserForAnalysis struct {
+	UserNameField
+	MailAddressField
+	AgeField
+	GenderField
+	FromField
+	CreatedAtField
+	UpdatedAtField
+}
+
 // IDを付与して、新しいUserを作成する
 func NewUser(u User) User {
 	u.ID = newUserID(u.UserName)
