@@ -73,7 +73,7 @@ type UpdatedAtField struct {
 }
 
 // BigQueryの解析用
-type UserForAnalyze struct {
+type UserForAnalysis struct {
 	UserNameField
 	MailAddressField
 	AgeField

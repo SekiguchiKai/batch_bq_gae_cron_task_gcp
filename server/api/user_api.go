@@ -33,13 +33,13 @@ func InitUserAPI(g *gin.RouterGroup) {
 func createUserAnalyzedResult(c *gin.Context) {
 	util.InfoLog(c.Request, "createUserAnalyzedResult is called")
 
-	var param model.UserForAnalyze
+	var param model.UserForAnalysis
 	if err := bindUserForAnalyzeFromJson(c, &param); err != nil {
 		util.RespondAndLog(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	sql, err := createSQLFromUserForAnalyze(param)
+	sql, err := createSQLFromUserForAnalysis(param)
 	if err != nil {
 		util.RespondAndLog(c, http.StatusBadRequest, err.Error())
 		return
@@ -114,7 +114,7 @@ func bindUserFromJson(c *gin.Context, dst *model.User) error {
 }
 
 // HTTPのリクエストボディのjsonデータUserForAnalyzeに変換する。
-func bindUserForAnalyzeFromJson(c *gin.Context, dst *model.UserForAnalyze) error {
+func bindUserForAnalyzeFromJson(c *gin.Context, dst *model.UserForAnalysis) error {
 	if err := c.BindJSON(dst); err != nil {
 		return err
 	}
@@ -154,7 +154,7 @@ func validateParamsForUser(u model.User) error {
 }
 
 // UserForAnalyzeからSQLを作成する
-func createSQLFromUserForAnalyze(u model.UserForAnalyze) (string, error) {
+func createSQLFromUserForAnalysis(u model.UserForAnalysis) (string, error) {
 
 	base := `SELECT *
 FROM [sandbox-sekky0905:batch_bq_task_gcp.user]
